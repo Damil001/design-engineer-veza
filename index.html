@@ -268,6 +268,17 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
 .cta p { max-width: 34rem; font-size: 1.1875rem; color: var(--ink); line-height: 1.4; }
 .links { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; justify-content: center; font-size: .9375rem; color: var(--ink); }
 .links a { text-underline-offset: 4px; }
+.pick { width: 100%; max-width: 34rem; text-align: left; display: grid; gap: 1.1rem; padding: 1.4rem; border-radius: var(--radius-panel); background: var(--glass); border: 1px solid var(--glass-border); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 10px 40px #1b0a2f14; }
+.pick h3 { margin: 0 0 .5rem; font-family: var(--font-body); font-size: .8125rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.slots { display: flex; flex-wrap: wrap; gap: .5rem; }
+.slot { font: inherit; font-size: .9375rem; font-weight: 500; line-height: 1; min-height: 44px; padding: .6rem 1rem; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); cursor: pointer; transition: background .2s, color .2s, border-color .2s, transform .2s var(--ease); }
+.slot:hover { border-color: var(--ink); transform: translateY(-1px); }
+.slot[aria-checked="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.pick textarea { width: 100%; min-height: 4.5rem; resize: vertical; font: inherit; font-size: .9375rem; padding: .75rem .9rem; border-radius: var(--radius-control); border: 1px solid var(--line); background: #fff; color: var(--ink); }
+.pick-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.pick-actions .btn { flex: 1 1 11rem; }
+.pick-actions [aria-disabled="true"] { opacity: .4; pointer-events: none; }
+.cta .pick-note { margin: 0; max-width: none; font-size: .8125rem; color: var(--muted); }
 .emojis { display: flex; gap: 1.25rem; font-size: clamp(2rem, 6vw, 3.25rem); line-height: 1; margin-top: .5rem; }
 .emojis span { display: inline-block; animation: bob 2.8s ease-in-out infinite alternate; animation-delay: calc(var(--k, 0) * -.5s); }
 .emojis span:nth-child(2) { --k: 1; } .emojis span:nth-child(3) { --k: 2; } .emojis span:nth-child(4) { --k: 3; } .emojis span:nth-child(5) { --k: 4; }
@@ -630,8 +641,17 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
     <div class="bgfx" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
     <div class="wrap cta">
       <h2 class="rv">Let's talk about it</h2>
-      <p class="rv">Twenty minutes is enough for me to walk through the work and hear what you would need to see.</p>
-      <a class="btn mag rv" href="https://calendly.com/damiljamil/30min" target="_blank" rel="noopener">Book a 20-min call</a>
+      <p class="rv">Twenty minutes is enough for me to walk through the work and hear what you would need to see. I am out next week, so pick a slot in the week after.</p>
+      <form class="pick rv" id="pick" onsubmit="return false" aria-label="Pick a time for a 20 minute call">
+        <div><h3 id="pd">Day</h3><div class="slots" id="days" role="radiogroup" aria-labelledby="pd"></div></div>
+        <div><h3 id="pt">Time (your local time)</h3><div class="slots" id="times" role="radiogroup" aria-labelledby="pt"></div></div>
+        <div><h3><label for="pn">Anything I should prepare? (optional)</label></h3><textarea id="pn" rows="2" placeholder="A topic, a question, a number you want to see"></textarea></div>
+        <div class="pick-actions">
+          <a class="btn" id="pgo" href="#" target="_blank" rel="noopener" aria-disabled="true">Pick a day and time</a>
+          <a class="btn secondary" id="pmail" href="#" aria-disabled="true">Email me instead</a>
+        </div>
+        <p class="pick-note">The first button opens a calendar invite with me already added. Just hit save.</p>
+      </form>
       <div class="links rv">
         <a href="https://www.damiljamil.com/" target="_blank" rel="noopener">damiljamil.com</a>
         <a href="https://www.linkedin.com/in/expert-frontend-web-developer" target="_blank" rel="noopener">LinkedIn</a>
@@ -775,6 +795,52 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
     });
     mag.addEventListener('pointerleave', function () { mag.style.translate = '0 0'; });
   }
+})();
+</script>
+<script>
+/* Meeting picker. Edit the config to change what Marko can choose. */
+(function () {
+  var CFG = { year: 2026, month: 11, days: [16, 17, 18, 19, 20], times: ['10:00', '11:00', '13:00', '14:00', '15:00', '16:00'], minutes: 20 };
+  var TO = ['damil', 'vezadigital.com'].join('@');
+  var daysEl = document.getElementById('days'), timesEl = document.getElementById('times');
+  var go = document.getElementById('pgo'), mail = document.getElementById('pmail'), note = document.getElementById('pn');
+  if (!daysEl || !timesEl) return;
+  var sel = { d: null, t: null };
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var label = function (d) { return new Date(CFG.year, CFG.month - 1, d).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' }); };
+  var stamp = function (d, hhmm, add) {
+    var p = hhmm.split(':'), t = +p[0] * 60 + +p[1] + (add || 0);
+    return CFG.year + pad(CFG.month) + pad(d) + 'T' + pad(Math.floor(t / 60)) + pad(t % 60) + '00';
+  };
+  function chip(text, group, onPick) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'slot'; b.textContent = text;
+    b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', 'false');
+    b.addEventListener('click', function () {
+      Array.prototype.forEach.call(group.children, function (c) { c.setAttribute('aria-checked', 'false'); });
+      b.setAttribute('aria-checked', 'true'); onPick(); update();
+    });
+    group.appendChild(b);
+  }
+  CFG.days.forEach(function (d) { chip(label(d), daysEl, function () { sel.d = d; }); });
+  CFG.times.forEach(function (t) { chip(t, timesEl, function () { sel.t = t; }); });
+  function update() {
+    var ready = sel.d !== null && sel.t !== null;
+    go.setAttribute('aria-disabled', ready ? 'false' : 'true');
+    mail.setAttribute('aria-disabled', ready ? 'false' : 'true');
+    if (!ready) { go.textContent = 'Pick a day and time'; go.href = '#'; mail.href = '#'; return; }
+    var when = label(sel.d) + ', ' + sel.t;
+    var n = note.value.trim();
+    var body = 'Chat about moving from contractor to full-time Design Engineer.' + (n ? '\n\nTo prepare: ' + n : '');
+    go.textContent = 'Invite Damil for ' + when;
+    go.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent('Design Engineer chat with Damil') +
+      '&dates=' + stamp(sel.d, sel.t) + '/' + stamp(sel.d, sel.t, CFG.minutes) +
+      '&details=' + encodeURIComponent(body) + '&add=' + encodeURIComponent(TO);
+    mail.href = 'mailto:' + TO + '?subject=' + encodeURIComponent('Call on ' + when) +
+      '&body=' + encodeURIComponent('Hi Damil,\n\n' + when + ' works for me.\n\n' + (n ? 'To prepare: ' + n + '\n\n' : ''));
+  }
+  note.addEventListener('input', update);
+  [go, mail].forEach(function (a) { a.addEventListener('click', function (e) { if (a.getAttribute('aria-disabled') === 'true') e.preventDefault(); }); });
 })();
 </script>
 
