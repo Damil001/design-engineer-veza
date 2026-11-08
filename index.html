@@ -282,6 +282,15 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
 .emojis { display: flex; gap: 1.25rem; font-size: clamp(2rem, 6vw, 3.25rem); line-height: 1; margin-top: .5rem; }
 .emojis span { display: inline-block; animation: bob 2.8s ease-in-out infinite alternate; animation-delay: calc(var(--k, 0) * -.5s); }
 .emojis span:nth-child(2) { --k: 1; } .emojis span:nth-child(3) { --k: 2; } .emojis span:nth-child(4) { --k: 3; } .emojis span:nth-child(5) { --k: 4; }
+/* emoji stickers: white die-cut edge, soft shadow, tilt, pop in on scroll, gentle sway */
+.stk { display: inline-block; font-size: .85em; line-height: 1; margin-left: .25em; vertical-align: -.05em; transform: rotate(var(--r, -8deg)); }
+.nb { white-space: nowrap; }
+.stk i, .emojis span { filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff) drop-shadow(0 5px 9px #1b0a2f33); }
+.stk i { display: inline-block; font-style: normal; animation: sway 3.4s ease-in-out infinite alternate; }
+@keyframes sway { from { transform: translateY(0) rotate(-5deg); } to { transform: translateY(-.12em) rotate(5deg); } }
+@keyframes stkIn { from { opacity: 0; transform: scale(.2) rotate(-50deg); } }
+@supports (animation-timeline: view()) { .stk { animation: stkIn linear both; animation-timeline: view(); animation-range: entry 20% entry 100%; } }
+@media (prefers-reduced-motion: reduce) { .stk, .stk i { animation: none; } }
 @keyframes bob { from { transform: translateY(0) rotate(-6deg); } to { transform: translateY(-.7rem) rotate(6deg); } }
 .cta-bg .b1 { top: auto; bottom: -30%; left: -10%; }
 .cta-bg .b2 { top: auto; bottom: -34%; right: -10%; }
@@ -475,7 +484,7 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
     <div class="wrap">
       <div class="head rv">
         <span class="eyebrow">What I am for</span>
-        <h2>I am the one who takes the difficult problems</h2>
+        <h2>I am the one who takes the difficult <span class="nb">problems <span class="stk" style="--r:-10deg" aria-hidden="true"><i>💪</i></span></span></h2>
         <p>When something breaks on a live client site, I want it on my desk. Here is a recent one.</p>
       </div>
       <div class="case rv">
@@ -511,7 +520,7 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
     <div class="wrap">
       <div class="head rv">
         <span class="eyebrow">In their words</span>
-        <h2>What the people I work with say</h2>
+        <h2>What the people I work with <span class="nb">say <span class="stk" style="--r:8deg" aria-hidden="true"><i>💜</i></span></span></h2>
         <p>Straight from Slack, from the clients and teammates on the other side of the work.</p>
       </div>
       <div class="wall">
@@ -583,7 +592,7 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
     <div class="wrap">
       <div class="head rv">
         <span class="eyebrow">The budget question</span>
-        <h2>Design that stays profitable</h2>
+        <h2>Design that stays <span class="nb">profitable <span class="stk" style="--r:-6deg" aria-hidden="true"><i>💰</i></span></span></h2>
         <p>Inna asked how long a page takes me, so the design stage stays inside the project budget. These are my real times.</p>
       </div>
       <div class="facts">
