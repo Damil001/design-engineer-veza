@@ -644,7 +644,7 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
       <p class="rv">Twenty minutes is enough for me to walk through the work and hear what you would need to see. I am out next week, so pick a slot in the week after.</p>
       <form class="pick rv" id="pick" onsubmit="return false" aria-label="Pick a time for a 20 minute call">
         <div><h3 id="pd">Day</h3><div class="slots" id="days" role="radiogroup" aria-labelledby="pd"></div></div>
-        <div><h3 id="pt">Time (your local time)</h3><div class="slots" id="times" role="radiogroup" aria-labelledby="pt"></div></div>
+        <div><h3 id="pt">Time (Serbian time, CET)</h3><div class="slots" id="times" role="radiogroup" aria-labelledby="pt"></div></div>
         <div><h3><label for="pn">Anything I should prepare? (optional)</label></h3><textarea id="pn" rows="2" placeholder="A topic, a question, a number you want to see"></textarea></div>
         <div class="pick-actions">
           <a class="btn" id="pgo" href="#" target="_blank" rel="noopener" aria-disabled="true">Pick a day and time</a>
@@ -829,12 +829,12 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
     go.setAttribute('aria-disabled', ready ? 'false' : 'true');
     mail.setAttribute('aria-disabled', ready ? 'false' : 'true');
     if (!ready) { go.textContent = 'Pick a day and time'; go.href = '#'; mail.href = '#'; return; }
-    var when = label(sel.d) + ', ' + sel.t;
+    var when = label(sel.d) + ', ' + sel.t + ' (Serbian time)';
     var n = note.value.trim();
     var body = 'Chat about moving from contractor to full-time Design Engineer.' + (n ? '\n\nTo prepare: ' + n : '');
-    go.textContent = 'Invite Damil for ' + when;
+    go.textContent = 'Invite Damil for ' + label(sel.d) + ', ' + sel.t;
     go.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent('Design Engineer chat with Damil') +
-      '&dates=' + stamp(sel.d, sel.t) + '/' + stamp(sel.d, sel.t, CFG.minutes) +
+      '&dates=' + stamp(sel.d, sel.t) + '/' + stamp(sel.d, sel.t, CFG.minutes) + '&ctz=Europe/Belgrade' +
       '&details=' + encodeURIComponent(body) + '&add=' + encodeURIComponent(TO);
     mail.href = 'mailto:' + TO + '?subject=' + encodeURIComponent('Call on ' + when) +
       '&body=' + encodeURIComponent('Hi Damil,\n\n' + when + ' works for me.\n\n' + (n ? 'To prepare: ' + n + '\n\n' : ''));
