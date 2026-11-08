@@ -264,7 +264,7 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
 /* close */
 .cta-bg { position: relative; margin-top: 2rem; }
 .cta { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1.5rem; padding-block: 8rem 6rem; }
-.cta h2 { font-size: clamp(2.5rem, 7vw, 5rem); letter-spacing: -0.045em; max-width: 12ch; }
+.cta h2 { font-size: clamp(2.25rem, 6vw, 4.25rem); letter-spacing: -0.045em; max-width: 16ch; }
 .cta p { max-width: 34rem; font-size: 1.1875rem; color: var(--ink); line-height: 1.4; }
 .links { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; justify-content: center; font-size: .9375rem; color: var(--ink); }
 .links a { text-underline-offset: 4px; }
@@ -593,23 +593,23 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
       <div class="head rv">
         <span class="eyebrow">The budget question</span>
         <h2>Design that stays <span class="nb">profitable <span class="stk" style="--r:-6deg" aria-hidden="true"><i>💰</i></span></span></h2>
-        <p>Inna asked how long a page takes me, so the design stage stays inside the project budget. These are my real times.</p>
+        <p>Every handoff between design and development costs a spec to write, a call to explain it and rework to fix what got lost. Fewer handoffs make a project more profitable. These are my real times.</p>
       </div>
       <div class="facts">
         <div class="fact rv" style="--i:0">
+          <span class="n">0</span>
+          <h3>Design to dev handoffs</h3>
+          <p>The person who designs the page also builds it, so more of the budget goes into the work and less into passing it along.</p>
+        </div>
+        <div class="fact rv" style="--i:1">
           <span class="n"><span class="cnt" data-to="1.5" data-dec="1">1.5</span>–2 h</span>
           <h3>One page, first pass</h3>
           <p>Measured on the Daylight Integrations page, including one round of changes.</p>
         </div>
-        <div class="fact rv" style="--i:1">
+        <div class="fact rv" style="--i:2">
           <span class="n">+<span class="cnt" data-to="1" data-dec="0">1</span> h</span>
           <h3>Learning a new system</h3>
           <p>One-time cost per client. It shrinks on every later page in the same file.</p>
-        </div>
-        <div class="fact rv" style="--i:2">
-          <span class="n">0</span>
-          <h3>Design to dev handoffs</h3>
-          <p>The person who designs the page also builds it, so there is no spec to write and no rework to chase.</p>
         </div>
       </div>
     </div>
@@ -649,7 +649,7 @@ section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
   <div class="cta-bg">
     <div class="bgfx" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
     <div class="wrap cta">
-      <h2 class="rv">Let's talk about it</h2>
+      <h2 class="rv">Design engineering is the future. Let's move there together.</h2>
       <p class="rv">Twenty minutes is enough for me to walk through the work and hear what you would need to see. I am out next week, so pick a slot in the week after.</p>
       <form class="pick rv" id="pick" onsubmit="return false" aria-label="Pick a time for a 20 minute call">
         <div><h3 id="pd">Day</h3><div class="slots" id="days" role="radiogroup" aria-labelledby="pd"></div></div>
